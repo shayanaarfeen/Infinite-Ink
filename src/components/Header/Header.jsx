@@ -1,49 +1,50 @@
 import { Container, LogoutBtn } from "../index";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { TiThMenu } from "react-icons/ti"; // Hamburger icon
 import { ImCross } from "react-icons/im"; // Close icon
 
-const navItems = [
-  {
-    name: "Home",
-    slug: "/",
-    authRequired: false,
-  },
-  {
-    name: "Login",
-    slug: "/login",
-    authRequired: false,
-  },
-  {
-    name: "Signup",
-    slug: "/signup",
-    authRequired: false,
-  },
-  {
-    name: "All Posts",
-    slug: "/all-posts",
-    authRequired: true,
-  },
-  {
-    name: "Add Post",
-    slug: "/add-post",
-    authRequired: true,
-  },
-];
-
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
-  const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false); // State for menu toggle
+  
+  const navItems = [
+    {
+      name: "Home",
+      slug: "/",
+      active: true,
+    },
+    {
+      name: "Login",
+      slug: "/login",
+      active: !authStatus,
+    },
+    {
+      name: "Signup",
+      slug: "/signup",
+      active: !authStatus,
+    },
+    {
+      name: "All Posts",
+      slug: "/all-posts",
+      active: authStatus,
+    },
+    {
+      name: "Add Post",
+      slug: "/add-post",
+      active: authStatus,
+    },
+  ];
 
-  const handleMenuToggle = () => {
-    setMenuOpen(!menuOpen);
-  };
+   const [menuOpen, setMenuOpen] = useState(false); // State for menu toggle
+
+   const handleMenuToggle = () => {
+     setMenuOpen(!menuOpen);
+   };
+
 
   return (
+    
     <header className="py-4 bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg relative z-50">
       <Container>
         <nav className="flex items-center justify-between">
@@ -66,7 +67,7 @@ function Header() {
           {/* Navigation Links - Hidden on small screens, visible on medium+ */}
           <ul className={`hidden md:flex space-x-8`}>
             {navItems.map((item) =>
-              !item.authRequired || authStatus ? (
+              item.active ? (
                 <li key={item.name}>
                   <Link
                     to={item.slug}
@@ -93,7 +94,7 @@ function Header() {
             } md:hidden absolute top-16 left-0 w-full bg-gradient-to-r from-blue-500 to-purple-500 py-6 space-y-4 shadow-lg z-40`}
           >
             {navItems.map((item) =>
-              !item.authRequired || authStatus ? (
+            item.active ? (
                 <li key={item.name} className="text-center">
                   <Link
                     to={item.slug}
